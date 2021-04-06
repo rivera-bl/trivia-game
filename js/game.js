@@ -1,6 +1,8 @@
 const question = document.getElementById("question");
 // Array.from because .getElementsByClassName returns a collection
-const choices = Array.from(document.getElementsByClassName("choice-text"))
+const choices = Array.from(document.getElementsByClassName("choice-text"));
+const questionCounterElement = document.getElementById("question-counter");
+const scoreElement = document.getElementById("score");
 
 let currentQuestion = {};
 let acceptingAnswers = false;
@@ -51,7 +53,9 @@ getNewQuestion = () => {
     if(availableQuestions.length === 0 || questionCounter >= MAX_QUESTIONS){
         return window.location.assign("/end.html");
     }
+
     questionCounter++;
+    questionCounterElement.innerText = `${questionCounter}/${MAX_QUESTIONS}`;
     // randomly gets a number between 0 and the ammount of questions
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     // fills the <h1> element with the question @ the randomly generated index
@@ -83,6 +87,12 @@ choices.forEach( choice => {
         // compares the number of the choice with the number in the questions.answer
         const classToApply = 
             selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
+        
+        // increments the score and updates the <p score> element
+        if(classToApply == 'correct'){
+            score += CORRECT_BONUS;
+            scoreElement.innerText = score;
+        };
 
         // the class applies green/red to the choice depending if it's correct or not
         selectedChoice.parentElement.classList.add(classToApply);
