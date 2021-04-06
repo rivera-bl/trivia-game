@@ -14,7 +14,6 @@ usernameElement.addEventListener('keyup', () => {
 
 saveHighScore = (e) => {
     e.preventDefault();
-    console.log('clicked');
 
     const score = {
         score: mostRecentScoreLS,
@@ -22,6 +21,13 @@ saveHighScore = (e) => {
     };
 
     highScoresLS.push(score);
+
+    // this sorts the array returning the b.score only if its value is positive when substracting a.score. TODO: review if it's a better way
+    highScoresLS.sort((a,b) => b.score - a.score)
+    // remove every item from index 5
+    highScoresLS.splice(5);
+
+    // update LS and go back home
     localStorage.setItem("highScores", JSON.stringify(highScoresLS));
-    console.log(highScoresLS);
+    window.location.assign("/");
 }
