@@ -51,7 +51,7 @@ startGame = () => {
 getNewQuestion = () => {
     // change page if there is no questions lefts
     if(availableQuestions.length === 0 || questionCounter >= MAX_QUESTIONS){
-        localStorage.setItem("Score", score);
+        localStorage.setItem("mostRecentScore", score);
         return window.location.assign("/end.html");
     }
 
