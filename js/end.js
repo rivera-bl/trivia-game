@@ -8,6 +8,7 @@ const highScoresLS = JSON.parse(localStorage.getItem("highScores")) || [];
 
 finalScoreElement.innerText = mostRecentScoreLS;
 
+// only when the input has text it enables the save btn
 usernameElement.addEventListener('keyup', () => {
     saveScoreBtn.disabled = !username.value;
 })
@@ -22,7 +23,7 @@ saveHighScore = (e) => {
 
     highScoresLS.push(score);
 
-    // this sorts the array returning the b.score only if its value is positive when substracting a.score. TODO: review if it's a better way
+    // this sorts the array returning the b.score only if its value is positive when substracting a.score. TODO: review if it's a better way, maybe comparing mostRecentScore with the last item in the array of highScoresLS and only saving if it's > or = when the array.length is <= 5
     highScoresLS.sort((a,b) => b.score - a.score)
     // remove every item from index 5
     highScoresLS.splice(5);
