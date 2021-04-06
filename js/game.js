@@ -76,13 +76,24 @@ choices.forEach( choice => {
         if(!acceptingAnswers) return;
 
         acceptingAnswers = false;
-        // saves the data-number of the selected choice
+        // saves the <p data-number> of the selected choice
         const selectedChoice = e.target;
         const selectedAnswer = selectedChoice.dataset["number"];
-        console.log(selectedAnswer);
-        
-        // gets a new question after a choice is clicked
-        getNewQuestion();
+
+        // compares the number of the choice with the number in the questions.answer
+        const classToApply = 
+            selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
+
+        // the class applies green/red to the choice depending if it's correct or not
+        selectedChoice.parentElement.classList.add(classToApply);
+
+        setTimeout( () => {
+            // deletes the class so it doesn't stack in the next question
+            selectedChoice.parentElement.classList.remove(classToApply);
+
+            // gets a new question after a choice is clicked
+            getNewQuestion();
+        }, 500)
     });
 });
 

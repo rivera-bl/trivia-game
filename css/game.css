@@ -24,3 +24,12 @@
     padding: 1.5rem;
     width: 100%;
 }
+
+/* TODO fix this colors to something softer */
+.correct {
+    background-color: #28a745;
+}
+
+.incorrect {
+    background-color: #dc3545;
+}
