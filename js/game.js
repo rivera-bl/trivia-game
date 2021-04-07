@@ -1,31 +1,96 @@
-const question = document.getElementById("question");
+const questionElement = document.getElementById("question");
 // Array.from because .getElementsByClassName returns a collection
-const choices = Array.from(document.getElementsByClassName("choice-text"));
+const choicesElements = Array.from(document.getElementsByClassName("choice-text"));
 const questionCounterElement = document.getElementById("question-counter");
 const scoreElement = document.getElementById("score");
 const loaderElement = document.getElementById("loader");
 const gameElement = document.getElementById("game");
 
 const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = 3;
 
 let acceptingAnswers = false;
 let score = 0;
 let questionCounter = 0;
 
 let questions = [];
-let availableQuestions = [];
 let currentQuestion = {};
 
-let domainAPI = 'https://opentdb.com/api.php?'
+const domainAPI = 'https://opentdb.com/api.php?'
+
+const startGame = () => {
+    questionCounter = 0;
+    score = 0;
+    getNewQuestion();
+    toggleSpinner();
+};
+
+// fills the game container with the question title, choices and counter
+const getNewQuestion = () => {
+    if(questionCounter == 10){
+        localStorage.setItem("mostRecentScore", score);
+        return window.location.assign("/end.html");
+    }
+    currentQuestion = questions[questionCounter];
+    questionElement.innerText = currentQuestion.question;
+    
+    choicesElements.forEach((choice, index) => {
+        choice.innerText = currentQuestion.choices[index];
+    });
+
+    questionCounter++;
+    questionCounterElement.innerText = `${questionCounter}/${questions.length}`;
+    acceptingAnswers = true;
+};
+
+choicesElements.forEach( choice => {
+    choice.addEventListener('click', (e) => {
+        clickChoice(e);
+    })
+});
+
+// determines if the selection was correct and gives red or green feedback
+const clickChoice = (e) => {
+    // lets the questions loads before accepting clicks
+    if(!acceptingAnswers) return;
+
+    const selectedChoice = e.target;
+    const classToApply = 
+        selectedChoice.innerText == 
+            currentQuestion.correctAnswer ? "correct" : "incorrect";
+    
+    incrementScore(CORRECT_BONUS, classToApply);
+    selectedChoice.parentElement.classList.add(classToApply);
+    acceptingAnswers = false;
+
+    setTimeout( () => {
+        selectedChoice.parentElement.classList.remove(classToApply);
+        getNewQuestion();
+    }, 500)
+};
+
+// hides the spinner and shows the game container
+const toggleSpinner = () => {
+    gameElement.classList.remove("hidden");
+    loaderElement.classList.add("hidden");
+}
+
+// increments the score if the answer is correct
+const incrementScore = (bonus, answer) => {
+    if(answer == 'correct'){
+        score += bonus;
+        scoreElement.innerText = score;
+    };
+}
 
 // fetch the trivia api, format the results and save them in the questions array
-fetchTrivia = async () => {
+const fetchTrivia = async () => {
     const res = await fetch(`${domainAPI}amount=10&difficulty=easy&type=multiple`);
     const resultsArray = await res.json();
 
-    // TODO solve this mess with replacing special chars in the response
+    // TODO solve this unreadable mess with replacing special chars in the response
+    // it's also missing &eacute;
     questions = resultsArray.results.map(result => {
+
         result.incorrect_answers.forEach((choice, index) => {
             result.incorrect_answers[index] = choice.replace(/(&#039\;)/g,"\'").replace(/(&quot\;)/g,"\"").replace(/&amp;/g, '&');
         })
@@ -46,74 +111,5 @@ fetchTrivia = async () => {
     });
     startGame();
 };
-
-startGame = () => {
-    questionCounter = 0;
-    score = 0;
-    availableQuestions = [...questions];
-    getNewQuestion();
-    // hides the spinner and show the game container
-    gameElement.classList.remove("hidden");
-    loaderElement.classList.add("hidden");
-};
-
-getNewQuestion = () => {
-    // change page if there is no questions lefts
-    if(availableQuestions.length === 0 || questionCounter >= MAX_QUESTIONS){
-        localStorage.setItem("mostRecentScore", score);
-        return window.location.assign("/end.html");
-    }
-
-    questionCounter++;
-    questionCounterElement.innerText = `${questionCounter}/${MAX_QUESTIONS}`;
-    // randomly gets a number between 0 and the ammount of questions
-    const questionIndex = Math.floor(Math.random() * availableQuestions.length);
-    // fills the <h1> element with the question @ the randomly generated index
-    currentQuestion = availableQuestions[questionIndex];
-    question.innerText = currentQuestion.question;
-    
-    // fills the <p> elements with the choices of the currentQuestion
-    choices.forEach((choice, index) => {
-        choice.innerText = currentQuestion.choices[index];
-    });
-
-    // after loading the question its deleted it from the array
-    availableQuestions.splice(questionIndex, 1);
-
-    acceptingAnswers = true;
-};
-
-choices.forEach( choice => {
-    choice.addEventListener('click', e => {
-        // lets the questions loads before accepting clicks
-        if(!acceptingAnswers) return;
-
-        acceptingAnswers = false;
-        // saves the innerText of the selected <p> tag
-        const selectedChoice = e.target;
-        const selectedAnswer = selectedChoice.innerText;
-
-        // compares the selectedAnswer with the correctAnswer and determines a class
-        const classToApply = 
-            selectedAnswer == currentQuestion.correctAnswer ? "correct" : "incorrect";
-        
-        // increments the score and updates the <p score> element
-        if(classToApply == 'correct'){
-            score += CORRECT_BONUS;
-            scoreElement.innerText = score;
-        };
-
-        // the class applies green/red to the choice depending if it's correct or not
-        selectedChoice.parentElement.classList.add(classToApply);
-
-        setTimeout( () => {
-            // deletes the class so it doesn't stack in the next question
-            selectedChoice.parentElement.classList.remove(classToApply);
-
-            // gets a new question after a choice is clicked
-            getNewQuestion();
-        }, 500)
-    });
-});
 
 fetchTrivia();
