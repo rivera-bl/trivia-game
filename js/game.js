@@ -24,10 +24,17 @@ fetchTrivia = async () => {
     const res = await fetch(`${domainAPI}amount=10&difficulty=easy&type=multiple`);
     const resultsArray = await res.json();
 
+    // TODO solve this mess with replacing special chars in the response
     questions = resultsArray.results.map(result => {
+        result.incorrect_answers.forEach((choice, index) => {
+            result.incorrect_answers[index] = choice.replace(/(&#039\;)/g,"\'").replace(/(&quot\;)/g,"\"").replace(/&amp;/g, '&');
+        })
+
+        result.correct_answer = result.correct_answer.replace(/(&#039\;)/g,"\'").replace(/(&quot\;)/g,"\"").replace(/&amp;/g, '&');
+
         // format the results
         const formattedResult = {
-            question: result.question,
+            question: result.question.replace(/(&#039\;)/g,"\'").replace(/(&quot\;)/g,"\"").replace(/&amp;/g, '&'),
             choices: [...result.incorrect_answers],
             correctAnswer: result.correct_answer
         };
@@ -35,7 +42,6 @@ fetchTrivia = async () => {
         formattedResult.choices.push(result.correct_answer);
         // randomize the items location inside the choices array
         formattedResult.choices.sort(() => Math.random() - 0.5);
-
         return formattedResult;
     });
     startGame();
