@@ -4,42 +4,40 @@ const choices = Array.from(document.getElementsByClassName("choice-text"));
 const questionCounterElement = document.getElementById("question-counter");
 const scoreElement = document.getElementById("score");
 
-let currentQuestion = {};
+const CORRECT_BONUS = 10;
+const MAX_QUESTIONS = 3;
+
 let acceptingAnswers = false;
 let score = 0;
 let questionCounter = 0;
+
+let questions = [];
 let availableQuestions = [];
+let currentQuestion = {};
 
-let questions = [
-    {
-        question: 'Inside which HTML element do we put the JavaScript??',
-        choice1: '<script>',
-        choice2: '<javascript>',
-        choice3: '<js>',
-        choice4: '<scripting>',
-        answer: 1,
-    },
-    {
-        question:
-            "What is the correct syntax for referring to an external script called 'xxx.js'?",
-        choice1: "<script href='xxx.js'>",
-        choice2: "<script name='xxx.js'>",
-        choice3: "<script src='xxx.js'>",
-        choice4: "<script file='xxx.js'>",
-        answer: 3,
-    },
-    {
-        question: " How do you write 'Hello World' in an alert box?",
-        choice1: "msgBox('Hello World');",
-        choice2: "alertBox('Hello World');",
-        choice3: "msg('Hello World');",
-        choice4: "alert('Hello World');",
-        answer: 4,
-    },
-];
+let domainAPI = 'https://opentdb.com/api.php?'
 
-const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = 3;
+// fetch the trivia api, format the results and save them in the questions array
+fetchTrivia = async () => {
+    const res = await fetch(`${domainAPI}amount=10&difficulty=easy&type=multiple`);
+    const resultsArray = await res.json();
+
+    questions = resultsArray.results.map(result => {
+        // format the results
+        const formattedResult = {
+            question: result.question,
+            choices: [...result.incorrect_answers],
+            correctAnswer: result.correct_answer
+        };
+
+        formattedResult.choices.push(result.correct_answer);
+        // randomize the items location inside the choices array
+        formattedResult.choices.sort(() => Math.random() - 0.5);
+
+        return formattedResult;
+    });
+    startGame();
+};
 
 startGame = () => {
     questionCounter = 0;
@@ -64,9 +62,8 @@ getNewQuestion = () => {
     question.innerText = currentQuestion.question;
     
     // fills the <p> elements with the choices of the currentQuestion
-    choices.forEach(choice => {
-        const number = choice.dataset["number"];
-        choice.innerText = currentQuestion["choice" + number];
+    choices.forEach((choice, index) => {
+        choice.innerText = currentQuestion.choices[index];
     });
 
     // after loading the question its deleted it from the array
@@ -81,13 +78,13 @@ choices.forEach( choice => {
         if(!acceptingAnswers) return;
 
         acceptingAnswers = false;
-        // saves the <p data-number> of the selected choice
+        // saves the innerText of the selected <p> tag
         const selectedChoice = e.target;
-        const selectedAnswer = selectedChoice.dataset["number"];
+        const selectedAnswer = selectedChoice.innerText;
 
-        // compares the number of the choice with the number in the questions.answer
+        // compares the selectedAnswer with the correctAnswer and determines a class
         const classToApply = 
-            selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
+            selectedAnswer == currentQuestion.correctAnswer ? "correct" : "incorrect";
         
         // increments the score and updates the <p score> element
         if(classToApply == 'correct'){
@@ -108,4 +105,4 @@ choices.forEach( choice => {
     });
 });
 
-startGame();
+fetchTrivia();
