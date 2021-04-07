@@ -3,6 +3,8 @@ const question = document.getElementById("question");
 const choices = Array.from(document.getElementsByClassName("choice-text"));
 const questionCounterElement = document.getElementById("question-counter");
 const scoreElement = document.getElementById("score");
+const loaderElement = document.getElementById("loader");
+const gameElement = document.getElementById("game");
 
 const CORRECT_BONUS = 10;
 const MAX_QUESTIONS = 3;
@@ -44,6 +46,9 @@ startGame = () => {
     score = 0;
     availableQuestions = [...questions];
     getNewQuestion();
+    // hides the spinner and show the game container
+    gameElement.classList.remove("hidden");
+    loaderElement.classList.add("hidden");
 };
 
 getNewQuestion = () => {
