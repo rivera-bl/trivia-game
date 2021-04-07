@@ -83,7 +83,7 @@ h3 {
 
 /* BUTTONS */
 
-.btn {
+.main {
     font-size: 1.8rem;
     padding: 1rem 0;
     width: 20rem;
@@ -95,7 +95,7 @@ h3 {
     background-color: white;
 }
 
-.btn:hover {
+.main:hover {
     cursor: pointer;
     box-shadow: 0 0.4rem 1.4rem 0 rgba(81, 185, 235, 0.5);
     transform: translateY(-0.1rem);
@@ -131,3 +131,9 @@ input::placeholder {
     color: #aaa;
     text-align: center;
 }
+
+.form-control {
+    outline: none;
+    text-align-last: center;
+}
+
