@@ -3,12 +3,7 @@ class Game {
     constructor(bonusCorrect){
         this.bonusCorrect = bonusCorrect;
     }
-
-    // METHODS:
-    // spinnerToggle
-    // startGame
-    // questionNext
-
+    
     async questionsLoad(questionsAmount, category=""){
         questionsAmount = `amount=${questionsAmount}`;
         category = `category=${category}`;
@@ -20,10 +15,17 @@ class Game {
 
         return questions;
     }
+    
+    choiceEvaluate(e, currentQuestion){
+        const selectedChoice = e.target;
+        const choiceEvaluated = 
+            selectedChoice.innerText == 
+                currentQuestion.correctAnswer ? "correct" : "incorrect";
+        
+        if(choiceEvaluated == 'correct'){
+            score += this.bonusCorrect;
+        };
 
-    // questionNext(){
-    //     if(questionCount == questionsAmount){
-    //         return window.location.assign("/end.html");
-    //     }
-    // }
+        return choiceEvaluated;
+    }
 }

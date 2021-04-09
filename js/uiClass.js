@@ -3,7 +3,7 @@ class UI {
     constructor(){
     }
 
-    async loadCategories(elementToFill){
+    async printCategories(elementToFill){
         const categoriesJSON = await httpClient.get('/api_category.php')
         const categories = categoriesJSON.trivia_categories
 
@@ -15,10 +15,6 @@ class UI {
             elementToFill.appendChild(option);
         });
     };
-
-    // METHODS
-    // formatQuestions
-    // loadQuestionCount
 
     // TODO: solve this replace mess
     async formatQuestions(questionsToFormat) {
@@ -45,14 +41,31 @@ class UI {
         return questionsToFormat;
     }
 
-    async loadCurrentQuestionAndChoices(questions){
-        const currentQuestion = await questions[questionCount];
+    async loadCurrentQuestionAndChoices(currentQuestion){
         questionTitleElement.innerText = currentQuestion.question;
 
         choicesElements.forEach((choice, index) => {
             choice.innerText = currentQuestion.choices[index];
         });
+
+        acceptingAnswers = true;
     };
+
+    feedbackChoiceEvaluated(e, choiceEvaluated){
+        const selectedChoice = e.target;
+        selectedChoice.parentElement.classList.add(choiceEvaluated);
+        acceptingAnswers = false;
+    }
+
+    feedbackRemove(e, choiceEvaluated){
+        const selectedChoice = e.target;
+        selectedChoice.parentElement.classList.remove(choiceEvaluated);
+    }
+
+    updateHUD(questions){
+        scoreElement.innerText = score;
+        questionCounterElement.innerText = `${questionCount+1}/${questions.length}`;
+    }
     
     toggleSpinner(gameElement, loaderElement){
         gameElement.classList.remove("hidden");
