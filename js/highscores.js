@@ -1,10 +1,19 @@
-const highScoresList = document.getElementById("high-scores-ul");
+const highScoresTableElement = document.getElementById("high-scores-table");
 const highScoresLS = JSON.parse(localStorage.getItem("highScores")) || [];
 
-highScoresList.innerHTML = 
-    // takes the LS array and returns a modified version of it
-    highScoresLS.map(score => {
-        return `<li class= "high-score">${score.name} - ${score.category} - ${score.score}</li>`;
+highScoresLS.forEach((highscore, index) =>{
+
+    let tr = document.createElement('tr');
+    let tdRank = tr.appendChild(document.createElement('td'));
+    tdRank.innerHTML = index+1;
+
+    Object.values(highscore).forEach(value => {
+
+        let td = tr.appendChild(document.createElement('td'));
+        td.innerHTML = value;
     })
-    .join("");
+
+    highScoresTableElement.appendChild(tr);
+});
+
 

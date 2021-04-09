@@ -1,15 +1,36 @@
-/* TODO style the list as a table */
-#high-scores-ul {
-    list-style: none;
-    padding-left: 0;
-    margin-bottom: 4rem;
+.content-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 2rem;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-.high-score {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+.content-table thead tr {
+    background-color: #56a5eb;
+    color: #ffffff;
+    text-align: left;
 }
 
-.high-score:hover {
-    transform: scale(1.025);
+.content-table th,
+.content-table td {
+    padding: 2px 15px;
 }
+
+.content-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.content-table tbody tr:last-of-type {
+    border-bottom: 1px solid #56a5eb;
+}
+
+/* /1* TODO: add an active-row class to the row of the current user score *1/ */
+/* .content-table tbody tr.active-row { */
+/*     font-weight: bold; */
+/*     color: #56a5eb; */
+/* } */
