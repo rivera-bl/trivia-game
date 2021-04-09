@@ -37,7 +37,7 @@ startGame = async () => {
 
             setTimeout( () => {
                 if(questionCount == QUESTIONS_AMOUNT){
-                    // localStorage.setItem("mostRecentScore", score);
+                    localStorage.setItem("mostRecentScore", score);
                     return window.location.assign("/end.html");
                 }
 
