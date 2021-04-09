@@ -10,12 +10,30 @@ class Game {
 
         const query = `${questionsAmount}&${category}&type=multiple`;
 
-        let questions = await httpClient.get(`/api.php?${query}`);
-        questions = await ui.formatQuestions(questions)
+        const questions = await httpClient.get(`/api.php?${query}`);
+        const questionsFormatted = await this.formatQuestions(questions)
 
-        return questions;
+        return questionsFormatted;
     }
     
+    async formatQuestions(questionsToFormat) {
+        questionsToFormat = await questionsToFormat.results.map(result => {
+            // format the results
+            const formattedResult = {
+                question: result.question,
+                choices: [...result.incorrect_answers],
+                correctAnswer: result.correct_answer
+            };
+
+            formattedResult.choices.push(result.correct_answer);
+            // randomize the items location of the choices array
+            formattedResult.choices.sort(() => Math.random() - 0.5);
+            return formattedResult;
+        });
+
+        return questionsToFormat;
+    }
+
     choiceEvaluate(e, currentQuestion){
         const selectedChoice = e.target;
         const choiceEvaluated = 
