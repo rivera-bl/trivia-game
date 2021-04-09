@@ -6,8 +6,11 @@ ui.printCategories(selectElement);
 
 const playBtn = document.getElementById("play");
 playBtn.addEventListener('click', () => {
-    const category = document.getElementById('category').value;
+    const categoriesElement = document.getElementById('category');
+    const categoryId = categoriesElement.value;
+    const categoryName = categoriesElement.selectedOptions[0].text; 
 
-    localStorage.setItem("category", category);
+    localStorage.setItem("category", categoryId);
+    localStorage.setItem("categoryName", categoryName);
 });
 
