@@ -21,8 +21,8 @@ class UI {
     // loadQuestionCount
 
     // TODO: solve this replace mess
-    formatQuestions(questionsToFormat) {
-        questionsToFormat = questionsToFormat.results.map(result => {
+    async formatQuestions(questionsToFormat) {
+        questionsToFormat = await questionsToFormat.results.map(result => {
             result.incorrect_answers.forEach((choice, index) => {
                 result.incorrect_answers[index] = choice.replace(/(&#039\;)/g,"\'").replace(/(&quot\;)/g,"\"").replace(/&amp;/g, '&');
             })
@@ -41,20 +41,21 @@ class UI {
             formattedResult.choices.sort(() => Math.random() - 0.5);
             return formattedResult;
         });
+
+        return questionsToFormat;
     }
 
-    // async loadCurrentQuestionAndChoices(questions){
-    //     currentQuestion = questions[questionCount];
-    //     questionTitleElement.innerText = currentQuestion.question;
+    async loadCurrentQuestionAndChoices(questions){
+        const currentQuestion = await questions[questionCount];
+        questionTitleElement.innerText = currentQuestion.question;
 
-    //     choicesElements.forEach((choice, index) => {
-    //         choice.innerText = currentQuestion.choices[index];
-    //     });
-    // };
-
+        choicesElements.forEach((choice, index) => {
+            choice.innerText = currentQuestion.choices[index];
+        });
+    };
     
-    // toggleSpinner(gameElement, loaderElement){
-    //     gameElement.classList.remove("hidden");
-    //     loaderElement.classList.add("hidden");
-    // };
+    toggleSpinner(gameElement, loaderElement){
+        gameElement.classList.remove("hidden");
+        loaderElement.classList.add("hidden");
+    };
 }

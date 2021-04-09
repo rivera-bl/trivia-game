@@ -16,10 +16,9 @@ class Game {
         const query = `${questionsAmount}&${category}&type=multiple`;
 
         let questions = await httpClient.get(`/api.php?${query}`);
-        ui.formatQuestions(questions)
+        questions = await ui.formatQuestions(questions)
 
-        // return questions;
-        console.log(questions.results);
+        return questions;
     }
 
     // questionNext(){
