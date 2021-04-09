@@ -9,13 +9,17 @@
         <div class="container">
             <div id="home" class="flex-center flex-column">
                 <h1>Quiz Game</h1>
-                <a class="main btn" href="/game.html">Jugar</a>
-                <a class="main btn" href="/highscores.html">Tabla de Puntajes</a>
+                <input type="submit" class= "main btn" id="play" value="Play">
+                <!-- <a id="play" class="main btn" href="/game.html">Play</a> -->
+                <a class="main btn" href="/highscores.html">High Scores</a>
                 <select id="category" class="main form-control">
                   <option value="" selected disabled hidden>Categories</option>
                 </select>
             </div>
         </div>
-        <script src="js/app.js"></script>
+    <script src="/js/httpClient.js"></script>
+    <script src="/js/uiClass.js"></script>
+    <script src="/js/gameClass.js"></script>
+    <script src="/js/app.js"></script>
     </body>
 </html>

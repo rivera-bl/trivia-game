@@ -1,20 +1,19 @@
+const QUESTIONS_AMOUNT = 5;
+const BONUS_CORRECT = 100;
 
-const fetchCategories = async () => {
-    const res = await fetch("https://opentdb.com/api_category.php");
-    const resJSON = await res.json();
-    
-    const categoriesArray = resJSON.trivia_categories;
-    const selectElement = document.getElementById('category');
-    // console.log(selectElement);
+let questionCount = 0;
 
-    categoriesArray.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category.id;
-        // option.innerText = category.name;
-        option.appendChild(document.createTextNode(category.name))
+const httpClient = new HttpClient('https://opentdb.com');
+const ui = new UI();
+const game = new Game(BONUS_CORRECT);
 
-        selectElement.appendChild(option);
-    });
-};
+const selectElement = document.getElementById('category');
+ui.loadCategories(selectElement);
 
-document.addEventListener('DOMContentLoaded', fetchCategories);
+const playBtn = document.getElementById("play");
+playBtn.addEventListener('click', (e) => {
+    const category = document.getElementById('category').value;
+
+    game.questionsLoad(QUESTIONS_AMOUNT, category);
+});
+
