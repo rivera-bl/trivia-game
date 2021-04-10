@@ -1,18 +1,21 @@
+// Trivia would be a more appropiate name
 class Game {
 
     constructor(bonusCorrect){
         this.bonusCorrect = bonusCorrect;
     }
     
+    // TODO:
+    // could narrow the tasks of this function. the function is called questionsLoad,
+    // so its job shoud only be to take the questions and get them back.
+    // its name could even be queryFormat,
+    // and the questions could be fetched(1) and fomatted(2) straight from startGame
     async questionsLoad(questionsAmount, category=""){
         questionsAmount = `amount=${questionsAmount}`;
         category = `category=${category}`;
-
         const query = `${questionsAmount}&${category}&type=multiple`;
-
         const questions = await httpClient.get(`/api.php?${query}`);
         const questionsFormatted = await this.formatQuestions(questions)
-
         return questionsFormatted;
     }
     
